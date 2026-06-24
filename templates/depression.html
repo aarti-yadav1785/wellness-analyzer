@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depression Screening — Wellness Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>💙
+            {% if lang == 'hi' %}मनोदशा जांच (PHQ-9)
+            {% else %}Mood Screening (PHQ-9){% endif %}
+        </h1>
+        <p class="subtitle">
+            {% if lang == 'hi' %}
+                पिछले 2 हफ्तों के बारे में सोचकर जवाब दें
+            {% else %}
+                Answer based on how you've felt over
+                the past 2 weeks
+            {% endif %}
+        </p>
+    </div>
+
+    {% if not submitted %}
+    <div class="question-card">
+
+        <!-- Important note -->
+        <div class="research-note">
+            ⚠️
+            {% if lang == 'hi' %}
+                यह PHQ-9 एक clinically validated screening
+                tool है जो दुनियाभर के doctors उपयोग करते
+                हैं। यह diagnosis नहीं है — सिर्फ एक
+                self-awareness check है।
+                <br><br>
+                <strong>Scale:</strong>
+                0 = बिल्कुल नहीं |
+                1 = कुछ दिनों में |
+                2 = आधे से ज़्यादा दिनों में |
+                3 = लगभग हर दिन
+            {% else %}
+                PHQ-9 is a clinically validated screening
+                tool used by doctors worldwide. This is
+                NOT a diagnosis — it's a self-awareness
+                check only.
+                <br><br>
+                <strong>Scale:</strong>
+                0 = Not at all |
+                1 = Several days |
+                2 = More than half the days |
+                3 = Nearly every day
+            {% endif %}
+        </div>
+
+        <form method="POST" action="/depression">
+            <input type="hidden" name="lang" value="{{ lang }}">
+
+            <!-- Q1 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q1.</span>
+                    {% if lang == 'hi' %}
+                        उन चीज़ों में रुचि या खुशी कम लगना
+                        जो आपको आमतौर पर पसंद हैं?
+                    {% else %}
+                        Little interest or pleasure in doing
+                        things you usually enjoy?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q1" id="q1a" value="0" required><label for="q1a">0</label></div>
+                    <div><input type="radio" name="q1" id="q1b" value="1"><label for="q1b">1</label></div>
+                    <div><input type="radio" name="q1" id="q1c" value="2"><label for="q1c">2</label></div>
+                    <div><input type="radio" name="q1" id="q1d" value="3"><label for="q1d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q2.</span>
+                    {% if lang == 'hi' %}
+                        उदास, निराश या hopeless महसूस करना —
+                        लगातार कई दिनों तक?
+                    {% else %}
+                        Feeling down, depressed, or hopeless —
+                        persistently over several days?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q2" id="q2a" value="0" required><label for="q2a">0</label></div>
+                    <div><input type="radio" name="q2" id="q2b" value="1"><label for="q2b">1</label></div>
+                    <div><input type="radio" name="q2" id="q2c" value="2"><label for="q2c">2</label></div>
+                    <div><input type="radio" name="q2" id="q2d" value="3"><label for="q2d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q3.</span>
+                    {% if lang == 'hi' %}
+                        सोने में परेशानी — बहुत कम सोना
+                        या बहुत ज़्यादा सोना?
+                    {% else %}
+                        Trouble falling/staying asleep,
+                        or sleeping too much?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q3" id="q3a" value="0" required><label for="q3a">0</label></div>
+                    <div><input type="radio" name="q3" id="q3b" value="1"><label for="q3b">1</label></div>
+                    <div><input type="radio" name="q3" id="q3c" value="2"><label for="q3c">2</label></div>
+                    <div><input type="radio" name="q3" id="q3d" value="3"><label for="q3d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q4.</span>
+                    {% if lang == 'hi' %}
+                        थका हुआ महसूस करना या energy
+                        बहुत कम होना?
+                    {% else %}
+                        Feeling tired or having
+                        very little energy?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q4" id="q4a" value="0" required><label for="q4a">0</label></div>
+                    <div><input type="radio" name="q4" id="q4b" value="1"><label for="q4b">1</label></div>
+                    <div><input type="radio" name="q4" id="q4c" value="2"><label for="q4c">2</label></div>
+                    <div><input type="radio" name="q4" id="q4d" value="3"><label for="q4d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q5.</span>
+                    {% if lang == 'hi' %}
+                        भूख कम लगना या ज़्यादा खाना?
+                    {% else %}
+                        Poor appetite or overeating?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q5" id="q5a" value="0" required><label for="q5a">0</label></div>
+                    <div><input type="radio" name="q5" id="q5b" value="1"><label for="q5b">1</label></div>
+                    <div><input type="radio" name="q5" id="q5c" value="2"><label for="q5c">2</label></div>
+                    <div><input type="radio" name="q5" id="q5d" value="3"><label for="q5d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q6.</span>
+                    {% if lang == 'hi' %}
+                        खुद के बारे में बुरा महसूस करना —
+                        जैसे खुद को failure या बोझ समझना?
+                    {% else %}
+                        Feeling bad about yourself —
+                        like a failure or a burden to others?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q6" id="q6a" value="0" required><label for="q6a">0</label></div>
+                    <div><input type="radio" name="q6" id="q6b" value="1"><label for="q6b">1</label></div>
+                    <div><input type="radio" name="q6" id="q6c" value="2"><label for="q6c">2</label></div>
+                    <div><input type="radio" name="q6" id="q6d" value="3"><label for="q6d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q7.</span>
+                    {% if lang == 'hi' %}
+                        किसी चीज़ पर ध्यान लगाने में
+                        परेशानी — जैसे पढ़ना या TV देखना?
+                    {% else %}
+                        Trouble concentrating on things —
+                        like reading or watching TV?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q7" id="q7a" value="0" required><label for="q7a">0</label></div>
+                    <div><input type="radio" name="q7" id="q7b" value="1"><label for="q7b">1</label></div>
+                    <div><input type="radio" name="q7" id="q7c" value="2"><label for="q7c">2</label></div>
+                    <div><input type="radio" name="q7" id="q7d" value="3"><label for="q7d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q8.</span>
+                    {% if lang == 'hi' %}
+                        इतना धीरे चलना या बोलना कि
+                        दूसरों ने notice किया हो — या इतना
+                        बेचैन होना कि बैठ न पाएं?
+                    {% else %}
+                        Moving or speaking so slowly that
+                        others noticed — or being so restless
+                        that you couldn't sit still?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q8" id="q8a" value="0" required><label for="q8a">0</label></div>
+                    <div><input type="radio" name="q8" id="q8b" value="1"><label for="q8b">1</label></div>
+                    <div><input type="radio" name="q8" id="q8c" value="2"><label for="q8c">2</label></div>
+                    <div><input type="radio" name="q8" id="q8d" value="3"><label for="q8d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q9 — Safety Question -->
+            <div class="form-group safety-question">
+                <div class="safety-label">
+                    ⚠️
+                    {% if lang == 'hi' %}
+                        यह एक महत्वपूर्ण सवाल है।
+                        कृपया ईमानदारी से जवाब दें।
+                    {% else %}
+                        This is an important question.
+                        Please answer honestly.
+                    {% endif %}
+                </div>
+                <label>
+                    <span class="q-num">Q9.</span>
+                    {% if lang == 'hi' %}
+                        खुद को नुकसान पहुँचाने या यह सोचना
+                        कि मर जाना बेहतर होगा — ऐसे विचार
+                        कितनी बार आए?
+                    {% else %}
+                        Thoughts of hurting yourself or that
+                        you would be better off dead —
+                        how often did these thoughts occur?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q9" id="q9a" value="0" required><label for="q9a">0</label></div>
+                    <div><input type="radio" name="q9" id="q9b" value="1"><label for="q9b">1</label></div>
+                    <div><input type="radio" name="q9" id="q9c" value="2"><label for="q9c">2</label></div>
+                    <div><input type="radio" name="q9" id="q9d" value="3"><label for="q9d">3</label></div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                {% if lang == 'hi' %}
+                    मेरे results देखें →
+                {% else %}
+                    See My Results →
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    {% else %}
+
+    <!-- Crisis — FIRST if Q9 > 0 -->
+    {% if result.crisis %}
+    <div class="crisis-box">
+        <h3>{{ result.crisis_resources.title }}</h3>
+        <p>{{ result.crisis_resources.message }}</p>
+        <ul>
+            {% for r in result.crisis_resources.resources %}
+            <li>📞 {{ r }}</li>
+            {% endfor %}
+        </ul>
+        <p style="margin-top:12px; font-size:0.9rem">
+            {% if lang == 'hi' %}
+                आप अकेले नहीं हैं। सहायता उपलब्ध है
+                और यह प्रभावी है।
+            {% else %}
+                You are not alone. Support is available
+                and it works.
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Results -->
+    <div class="question-card">
+        <h2>
+            {% if lang == 'hi' %}📊 आपके परिणाम
+            {% else %}📊 Your Results{% endif %}
+        </h2>
+
+        <div class="score-display">
+            {% if lang == 'hi' %}
+                आपका PHQ-9 score:
+            {% else %}
+                Your PHQ-9 Score:
+            {% endif %}
+            <span class="score-number">
+                {{ result.total_score }}/27
+            </span>
+        </div>
+
+        <div class="severity-badge
+            {{ 'severity-green' if result.severity == 'minimal'
+               else 'severity-yellow' if result.severity == 'mild'
+               else 'severity-red' }}">
+            {% if result.severity == 'minimal' %}
+                {% if lang == 'hi' %}🟢 Minimal{% else %}🟢 Minimal{% endif %}
+            {% elif result.severity == 'mild' %}
+                {% if lang == 'hi' %}🟡 Mild{% else %}🟡 Mild{% endif %}
+            {% elif result.severity == 'moderate' %}
+                {% if lang == 'hi' %}🟠 Moderate{% else %}🟠 Moderate{% endif %}
+            {% elif result.severity == 'moderately_severe' %}
+                {% if lang == 'hi' %}🔴 Moderately Severe{% else %}🔴 Moderately Severe{% endif %}
+            {% else %}
+                {% if lang == 'hi' %}🔴 Severe{% else %}🔴 Severe{% endif %}
+            {% endif %}
+        </div>
+
+        <div class="result-item
+            {{ 'warning' if result.severity not in ['minimal']
+               else 'good' }}">
+            <div class="tip">{{ result.tip }}</div>
+        </div>
+    </div>
+
+    <!-- Next Section -->
+    <div class="next-options">
+        <h3>
+            {% if lang == 'hi' %}
+                क्या आप anxiety screening
+                (GAD-7) भी complete करना चाहते हैं?
+            {% else %}
+                Would you like to complete the
+                anxiety screening (GAD-7) too?
+            {% endif %}
+        </h3>
+        <div class="next-btns">
+            <a href="/anxiety" class="btn-yes">
+                {% if lang == 'hi' %}हाँ, जांचें ✓
+                {% else %}Yes, Check ✓{% endif %}
+            </a>
+            <a href="/report" class="btn-no">
+                {% if lang == 'hi' %}नहीं, रिपोर्ट देखें
+                {% else %}No, See Report{% endif %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="crisis-bar">
+        🆘 {% if lang == 'hi' %}अभी मदद चाहिए?
+        {% else %}Need help right now?{% endif %}
+        <strong>iCall: 9152987821</strong> |
+        <strong>Vandrevala: 1860-2662-345</strong>
+    </div>
+
+</div>
+</body>
+</html>

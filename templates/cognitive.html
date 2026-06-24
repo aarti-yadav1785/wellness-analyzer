@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Patterns — Wellness Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>🧠
+            {% if lang == 'hi' %}मन की आदतें
+            {% else %}Cognitive Patterns{% endif %}
+        </h1>
+        <p class="subtitle">
+            {% if lang == 'hi' %}
+                आप कैसे सोचते हैं — एक surprising factor
+            {% else %}
+                How you think — a surprising mental health factor
+            {% endif %}
+        </p>
+    </div>
+
+    {% if not submitted %}
+    <div class="question-card">
+
+        <!-- Research note -->
+        <div class="research-note">
+            💡
+            {% if lang == 'hi' %}
+                Research finding: बार-बार सोचना (rumination)
+                depression का सबसे strong predictor है —
+                self-blame से भी ज़्यादा।
+            {% else %}
+                Research finding: Repetitive negative thinking
+                (rumination) is one of the STRONGEST predictors
+                of depression — even stronger than self-blame.
+            {% endif %}
+        </div>
+
+        <form method="POST" action="/cognitive">
+            <input type="hidden" name="lang" value="{{ lang }}">
+
+            <!-- Rumination -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        🔄 जब कोई समस्या आती है, तो क्या आप उसके
+                        बारे में बार-बार सोचते रहते हैं — बिना
+                        किसी हल तक पहुँचे?
+                        (जैसे — एक ही बात को घंटों दोहराना,
+                        सोते वक्त भी वही विचार आना)
+                    {% else %}
+                        🔄 When a problem arises, do you find
+                        yourself thinking about it repeatedly —
+                        without reaching a solution?
+                        (replaying the same thoughts for hours,
+                        unable to let go even at night)
+                    {% endif %}
+                </label>
+
+                <p style="font-size:0.8rem; color:#888;
+                           margin-bottom:12px">
+                    {% if lang == 'hi' %}
+                        स्केल: 0 = बिल्कुल नहीं |
+                        1 = कभी-कभी | 2 = अक्सर |
+                        3 = लगभग हर दिन
+                    {% else %}
+                        Scale: 0 = Not at all |
+                        1 = Sometimes | 2 = Often |
+                        3 = Nearly every day
+                    {% endif %}
+                </p>
+
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="rumination"
+                               id="r1" value="0" required>
+                        <label for="r1">
+                            {% if lang == 'hi' %}
+                                0 — बिल्कुल नहीं
+                            {% else %}
+                                0 — Not at all
+                            {% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="rumination"
+                               id="r2" value="1">
+                        <label for="r2">
+                            {% if lang == 'hi' %}
+                                1 — कभी-कभी
+                            {% else %}
+                                1 — Sometimes
+                            {% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="rumination"
+                               id="r3" value="2">
+                        <label for="r3">
+                            {% if lang == 'hi' %}
+                                2 — अक्सर
+                            {% else %}
+                                2 — Often
+                            {% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="rumination"
+                               id="r4" value="3">
+                        <label for="r4">
+                            {% if lang == 'hi' %}
+                                3 — लगभग हर दिन
+                            {% else %}
+                                3 — Nearly every day
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                {% if lang == 'hi' %}
+                    मेरे patterns जांचें →
+                {% else %}
+                    Analyze My Patterns →
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    {% else %}
+    <div class="question-card">
+        <h2>
+            {% if lang == 'hi' %}📊 आपके परिणाम
+            {% else %}📊 Your Results{% endif %}
+        </h2>
+
+        {% for item in results %}
+        <div class="result-item
+            {{ 'warning' if '⚠️' in item.status else
+               'good' if '✅' in item.status else 'info' }}">
+            <div class="factor">{{ item.factor }}</div>
+            <div class="status">{{ item.status }}</div>
+            <div class="tip">{{ item.tip }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="next-options">
+        <h3>
+            {% if lang == 'hi' %}
+                क्या आप depression screening
+                (PHQ-9) भी complete करना चाहते हैं?
+            {% else %}
+                Would you like to complete the
+                depression screening (PHQ-9) too?
+            {% endif %}
+        </h3>
+        <p style="color:#888; font-size:0.82rem;
+                  margin-bottom:15px">
+            {% if lang == 'hi' %}
+                ⚠️ यह एक clinically validated
+                screening tool है — diagnosis नहीं।
+            {% else %}
+                ⚠️ This is a clinically validated
+                screening tool — not a diagnosis.
+            {% endif %}
+        </p>
+        <div class="next-btns">
+            <a href="/depression" class="btn-yes">
+                {% if lang == 'hi' %}
+                    हाँ, जांचें ✓
+                {% else %}
+                    Yes, Check ✓
+                {% endif %}
+            </a>
+            <a href="/report" class="btn-no">
+                {% if lang == 'hi' %}
+                    नहीं, रिपोर्ट देखें
+                {% else %}
+                    No, See Report
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="crisis-bar">
+        🆘 {% if lang == 'hi' %}अभी मदद चाहिए?
+        {% else %}Need help right now?{% endif %}
+        <strong>iCall: 9152987821</strong> |
+        <strong>Vandrevala: 1860-2662-345</strong>
+    </div>
+
+</div>
+</body>
+</html>

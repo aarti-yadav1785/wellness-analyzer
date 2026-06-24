@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>🧠 Wellness Analyzer</h1>
+        <p class="subtitle">
+            A research-backed tool to understand your mental wellness
+        </p>
+        <p class="disclaimer">
+            ⚠️ This is NOT a clinical diagnosis tool.
+            It is a student research project for self-awareness only.
+        </p>
+    </div>
+
+    <!-- Language Select -->
+    <div class="lang-card">
+        <h2>Choose Your Language / भाषा चुनें</h2>
+        <div class="lang-btns">
+            <a href="/lifestyle?lang=en" class="btn btn-english">
+                🇬🇧 English
+            </a>
+            <a href="/lifestyle?lang=hi" class="btn btn-hindi">
+                🇮🇳 हिंदी
+            </a>
+        </div>
+    </div>
+
+    <!-- What this covers -->
+    <div class="sections-preview">
+        <h3>What we'll check:</h3>
+        <div class="preview-grid">
+            <div class="preview-item">
+                <span class="icon">😴</span>
+                <p>Lifestyle</p>
+            </div>
+            <div class="preview-item">
+                <span class="icon">👥</span>
+                <p>Social</p>
+            </div>
+            <div class="preview-item">
+                <span class="icon">🧠</span>
+                <p>Cognitive</p>
+            </div>
+            <div class="preview-item">
+                <span class="icon">💙</span>
+                <p>Depression</p>
+            </div>
+            <div class="preview-item">
+                <span class="icon">😰</span>
+                <p>Anxiety</p>
+            </div>
+        </div>
+        <p class="note">
+            You can stop after any section — you're in control.
+        </p>
+    </div>
+
+    <!-- Crisis Resources Always Visible -->
+    <div class="crisis-bar">
+        🆘 Need help right now?
+        <strong>iCall: 9152987821</strong> |
+        <strong>Vandrevala: 1860-2662-345</strong>
+    </div>
+
+</div>
+</body>
+</html>

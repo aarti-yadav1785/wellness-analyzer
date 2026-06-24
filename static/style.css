@@ -1,0 +1,435 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    min-height: 100vh;
+    padding: 30px 15px;
+    color: #333;
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Header */
+.header {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.header h1 { font-size: 2rem; color: #1a1a2e; margin-bottom: 8px; }
+.subtitle { color: #666; font-size: 1rem; margin-bottom: 12px; }
+.disclaimer {
+    background: #fff3cd;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.82rem;
+    color: #856404;
+}
+
+/* Language Card */
+.lang-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.lang-card h2 { color: #333; margin-bottom: 20px; }
+
+.lang-btns {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 14px 35px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.btn:hover { transform: scale(1.05); }
+.btn-english { background: #0f3460; color: white; }
+.btn-hindi { background: #e94560; color: white; }
+
+/* Sections Preview */
+.sections-preview {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.sections-preview h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.preview-grid {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.preview-item {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px 20px;
+    text-align: center;
+    flex: 1;
+    min-width: 80px;
+}
+
+.preview-item .icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+.preview-item p { font-size: 0.8rem; color: #555; font-weight: 600; }
+
+.note {
+    text-align: center;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+/* Crisis Bar */
+.crisis-bar {
+    background: #dc3545;
+    color: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Question Card */
+.question-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.question-card h2 {
+    color: #1a1a2e;
+    margin-bottom: 6px;
+    font-size: 1.3rem;
+}
+
+.question-card .desc {
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.form-group input[type="range"] {
+    width: 100%;
+    accent-color: #0f3460;
+}
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 4px;
+}
+
+.scale-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.scale-options label {
+    background: #f8f9fa;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: normal;
+    transition: all 0.2s;
+}
+
+.scale-options input[type="radio"] { display: none; }
+
+.scale-options input[type="radio"]:checked + label,
+.scale-options label:has(input:checked) {
+    background: #0f3460;
+    color: white;
+    border-color: #0f3460;
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #0f3460, #e94560);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.submit-btn:hover { opacity: 0.9; }
+
+/* Results */
+.result-item {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border-left: 4px solid #ddd;
+}
+
+.result-item.warning { border-left-color: #ffc107; }
+.result-item.good { border-left-color: #28a745; }
+.result-item.info { border-left-color: #17a2b8; }
+
+.result-item .factor {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.result-item .status {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.result-item .tip {
+    font-size: 0.88rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Next Section Buttons */
+.next-options {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.next-options h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.next-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-yes {
+    background: #0f3460;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-no {
+    background: #f8f9fa;
+    color: #333;
+    padding: 12px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid #ddd;
+}
+
+/* Crisis Box */
+.crisis-box {
+    background: #dc3545;
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.crisis-box h3 { margin-bottom: 10px; }
+.crisis-box p { font-size: 0.9rem; margin-bottom: 10px; }
+.crisis-box ul { list-style: none; }
+.crisis-box ul li {
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+/* Overall Risk */
+.overall-card {
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.overall-green { background: #28a745; }
+.overall-yellow { background: #ffc107; color: #333; }
+.overall-red { background: #dc3545; }
+
+/* Research Note Box */
+.research-note {
+    background: #e8f4fd;
+    border-left: 4px solid #3498db;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 0.85rem;
+    color: #1a5276;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* Question Number */
+.q-num {
+    background: #0f3460;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    margin-right: 6px;
+}
+
+/* Safety Question */
+.safety-question {
+    background: #fff3cd;
+    border-radius: 12px;
+    padding: 15px;
+    border: 2px solid #ffc107;
+}
+
+.safety-label {
+    font-size: 0.85rem;
+    color: #856404;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Score Display */
+.score-display {
+    text-align: center;
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 12px;
+}
+
+.score-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0f3460;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Severity Badge */
+.severity-badge {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.severity-green { background: #d4edda; color: #155724; }
+.severity-yellow { background: #fff3cd; color: #856404; }
+.severity-red { background: #f8d7da; color: #721c24; }
+
+
+/* ML Insights */
+.ml-insight-box {
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border-left: 4px solid #ddd;
+}
+
+.cluster { border-left-color: #9b59b6;
+           background: #f5eef8; }
+.dt { border-left-color: #27ae60;
+      background: #eafaf1; }
+.svm { border-left-color: #e67e22;
+       background: #fef9e7; }
+.lr { border-left-color: #2980b9;
+      background: #ebf5fb; }
+.knn { border-left-color: #e74c3c;
+       background: #fdedec; }
+
+.ml-label {
+    font-weight: bold;
+    color: #333;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.ml-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+}
+
+.ml-desc {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+.similar-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+
+.similar-table th {
+    background: #1a1a2e;
+    color: white;
+    padding: 8px;
+    text-align: center;
+}
+
+.similar-table td {
+    padding: 7px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}

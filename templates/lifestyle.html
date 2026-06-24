@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifestyle — Wellness Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>😴
+            {% if lang == 'hi' %}
+                जीवनशैली जांच
+            {% else %}
+                Lifestyle Check
+            {% endif %}
+        </h1>
+        <p class="subtitle">
+            {% if lang == 'hi' %}
+                अपनी रोज़मर्रा की आदतों के बारे में बताएं
+            {% else %}
+                Tell us about your daily habits
+            {% endif %}
+        </p>
+    </div>
+
+    {% if not submitted %}
+    <!-- FORM -->
+    <div class="question-card">
+        <form method="POST" action="/lifestyle">
+            <input type="hidden" name="lang" value="{{ lang }}">
+
+            <!-- Sleep -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        😴 आप रात में औसतन कितने घंटे सोते हैं?
+                    {% else %}
+                        😴 How many hours do you sleep per night on average?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="sleep"
+                               id="s1" value="4" required>
+                        <label for="s1">
+                            {% if lang == 'hi' %}4 घंटे से कम{% else %}Less than 4 hrs{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="sleep"
+                               id="s2" value="5">
+                        <label for="s2">
+                            {% if lang == 'hi' %}4-6 घंटे{% else %}4-6 hrs{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="sleep"
+                               id="s3" value="8">
+                        <label for="s3">
+                            {% if lang == 'hi' %}6-8 घंटे{% else %}6-8 hrs{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="sleep"
+                               id="s4" value="10">
+                        <label for="s4">
+                            {% if lang == 'hi' %}8+ घंटे{% else %}8+ hrs{% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        🏃 आप हफ्ते में कितनी बार शारीरिक
+                        गतिविधि/व्यायाम करते हैं?
+                    {% else %}
+                        🏃 How often do you exercise per week?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="exercise"
+                               id="e1" value="0" required>
+                        <label for="e1">
+                            {% if lang == 'hi' %}बिल्कुल नहीं{% else %}Never{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="exercise"
+                               id="e2" value="1">
+                        <label for="e2">
+                            {% if lang == 'hi' %}1-2 बार{% else %}1-2 times{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="exercise"
+                               id="e3" value="3">
+                        <label for="e3">
+                            {% if lang == 'hi' %}3-5 बार{% else %}3-5 times{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="exercise"
+                               id="e4" value="6">
+                        <label for="e4">
+                            {% if lang == 'hi' %}रोज़{% else %}Daily{% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen Time -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        📱 आपका रोज़ का recreational screen time
+                        कितना है? (फ़ोन, social media, TV —
+                        काम को छोड़कर)
+                    {% else %}
+                        📱 How much recreational screen time per day?
+                        (phone, social media, TV — excluding work)
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="screentime"
+                               id="sc1" value="1" required>
+                        <label for="sc1">
+                            {% if lang == 'hi' %}2 घंटे से कम{% else %}Less than 2 hrs{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="screentime"
+                               id="sc2" value="3">
+                        <label for="sc2">
+                            {% if lang == 'hi' %}2-4 घंटे{% else %}2-4 hrs{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="screentime"
+                               id="sc3" value="5">
+                        <label for="sc3">
+                            {% if lang == 'hi' %}4-6 घंटे{% else %}4-6 hrs{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="screentime"
+                               id="sc4" value="7">
+                        <label for="sc4">
+                            {% if lang == 'hi' %}6+ घंटे{% else %}6+ hrs{% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Morning Sunlight -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        🌅 सुबह उठने के पहले 1 घंटे में क्या आप
+                        10-15 मिनट बाहर धूप लेते हैं?
+                    {% else %}
+                        🌅 In the first hour after waking, do you
+                        get 10-15 mins of outdoor morning sunlight?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="sunlight"
+                               id="sun1" value="always" required>
+                        <label for="sun1">
+                            {% if lang == 'hi' %}हमेशा{% else %}Always{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="sunlight"
+                               id="sun2" value="sometimes">
+                        <label for="sun2">
+                            {% if lang == 'hi' %}कभी-कभी{% else %}Sometimes{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="sunlight"
+                               id="sun3" value="rarely">
+                        <label for="sun3">
+                            {% if lang == 'hi' %}कभी-कभार{% else %}Rarely{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="sunlight"
+                               id="sun4" value="never">
+                        <label for="sun4">
+                            {% if lang == 'hi' %}कभी नहीं{% else %}Never{% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal Regularity -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        🍽️ क्या आप रोज़ roughly same time पर
+                        खाना खाते हैं?
+                        (breakfast, lunch, dinner)
+                    {% else %}
+                        🍽️ Do you eat meals at roughly the same
+                        times each day?
+                        (breakfast, lunch, dinner)
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="meal_regularity"
+                               id="m1" value="always" required>
+                        <label for="m1">
+                            {% if lang == 'hi' %}हमेशा{% else %}Always{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="meal_regularity"
+                               id="m2" value="usually">
+                        <label for="m2">
+                            {% if lang == 'hi' %}अक्सर{% else %}Usually{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="meal_regularity"
+                               id="m3" value="sometimes">
+                        <label for="m3">
+                            {% if lang == 'hi' %}कभी-कभी{% else %}Sometimes{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="meal_regularity"
+                               id="m4" value="rarely">
+                        <label for="m4">
+                            {% if lang == 'hi' %}कभी-कभार{% else %}Rarely{% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enjoyable Activities -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        🎨 क्या आप रोज़ कुछ ऐसा करते हैं जो
+                        सिर्फ आपको खुशी दे — कोई hobby,
+                        creative काम, या nature में time?
+                        (काम या obligation नहीं)
+                    {% else %}
+                        🎨 Do you do something each day purely
+                        for enjoyment — a hobby, creative work,
+                        or time in nature?
+                        (not work or obligation)
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="enjoyable"
+                               id="ej1" value="daily" required>
+                        <label for="ej1">
+                            {% if lang == 'hi' %}रोज़{% else %}Daily{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="enjoyable"
+                               id="ej2" value="sometimes">
+                        <label for="ej2">
+                            {% if lang == 'hi' %}कभी-कभी{% else %}Sometimes{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="enjoyable"
+                               id="ej3" value="rarely">
+                        <label for="ej3">
+                            {% if lang == 'hi' %}कभी-कभार{% else %}Rarely{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="enjoyable"
+                               id="ej4" value="never">
+                        <label for="ej4">
+                            {% if lang == 'hi' %}कभी नहीं{% else %}Never{% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                {% if lang == 'hi' %}
+                    मेरी जीवनशैली जांचें →
+                {% else %}
+                    Analyze My Lifestyle →
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    {% else %}
+    <!-- RESULTS -->
+    <div class="question-card">
+        <h2>
+            {% if lang == 'hi' %}📊 आपके परिणाम{% else %}📊 Your Results{% endif %}
+        </h2>
+        <p class="desc">
+            {% if lang == 'hi' %}
+                यहाँ आपकी जीवनशैली का विश्लेषण है:
+            {% else %}
+                Here's what your lifestyle data shows:
+            {% endif %}
+        </p>
+
+        {% for item in results %}
+        <div class="result-item
+            {{ 'warning' if '⚠️' in item.status else
+               'good' if '✅' in item.status else 'info' }}">
+            <div class="factor">{{ item.factor }}</div>
+            <div class="status">{{ item.status }}</div>
+            <div class="tip">{{ item.tip }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Next Section -->
+    <div class="next-options">
+        <h3>
+            {% if lang == 'hi' %}
+                क्या आप अपने social factors भी check
+                करना चाहते हैं?
+            {% else %}
+                Would you like to check your social
+                factors too?
+            {% endif %}
+        </h3>
+        <p style="color:#888; font-size:0.85rem;
+                  margin-bottom:15px">
+            {% if lang == 'hi' %}
+                (loneliness, connections, aur ek
+                surprising insight)
+            {% else %}
+                (loneliness, connections, and a
+                surprising insight)
+            {% endif %}
+        </p>
+        <div class="next-btns">
+            <a href="/social" class="btn-yes">
+                {% if lang == 'hi' %}
+                    हाँ, जांचें ✓
+                {% else %}
+                    Yes, Check ✓
+                {% endif %}
+            </a>
+            <a href="/report" class="btn-no">
+                {% if lang == 'hi' %}
+                    नहीं, रिपोर्ट देखें
+                {% else %}
+                    No, See Report
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Crisis Bar -->
+    <div class="crisis-bar">
+        🆘 {% if lang == 'hi' %}अभी मदद चाहिए?
+        {% else %}Need help right now?{% endif %}
+        <strong>iCall: 9152987821</strong> |
+        <strong>Vandrevala: 1860-2662-345</strong>
+    </div>
+
+</div>
+</body>
+</html>

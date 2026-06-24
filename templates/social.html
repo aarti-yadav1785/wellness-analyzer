@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Factors — Wellness Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>👥
+            {% if lang == 'hi' %}सामाजिक जीवन जांच
+            {% else %}Social Factors Check{% endif %}
+        </h1>
+        <p class="subtitle">
+            {% if lang == 'hi' %}
+                आपके रिश्ते और सामाजिक जीवन के बारे में
+            {% else %}
+                About your relationships and social life
+            {% endif %}
+        </p>
+    </div>
+
+    {% if not submitted %}
+    <div class="question-card">
+        <form method="POST" action="/social">
+            <input type="hidden" name="lang" value="{{ lang }}">
+
+            <!-- Loneliness -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        😔 आपको कितनी बार अकेलापन महसूस होता है —
+                        चाहे लोग आसपास हों या न हों?
+                    {% else %}
+                        😔 How often do you feel lonely —
+                        even when people are around?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="loneliness"
+                               id="l1" value="0" required>
+                        <label for="l1">
+                            {% if lang == 'hi' %}कभी नहीं{% else %}Never{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="loneliness"
+                               id="l2" value="1">
+                        <label for="l2">
+                            {% if lang == 'hi' %}कभी-कभार{% else %}Rarely{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="loneliness"
+                               id="l3" value="2">
+                        <label for="l3">
+                            {% if lang == 'hi' %}कभी-कभी{% else %}Sometimes{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="loneliness"
+                               id="l4" value="3">
+                        <label for="l4">
+                            {% if lang == 'hi' %}अक्सर/हमेशा{% else %}Often/Always{% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Understood -->
+            <div class="form-group">
+                <label>
+                    {% if lang == 'hi' %}
+                        💬 क्या आपके पास लोग हैं, फिर भी कभी-कभी
+                        ऐसा लगता है कि कोई आपको सच में नहीं
+                        समझता?
+                        (भीड़ में भी अकेला महसूस होना)
+                    {% else %}
+                        💬 Even though you have people around,
+                        do you sometimes feel that nobody truly
+                        understands you?
+                        (feeling alone in a crowd)
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div>
+                        <input type="radio" name="understood"
+                               id="u1" value="0" required>
+                        <label for="u1">
+                            {% if lang == 'hi' %}कभी नहीं{% else %}Never{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="understood"
+                               id="u2" value="1">
+                        <label for="u2">
+                            {% if lang == 'hi' %}कभी-कभार{% else %}Rarely{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="understood"
+                               id="u3" value="2">
+                        <label for="u3">
+                            {% if lang == 'hi' %}कभी-कभी{% else %}Sometimes{% endif %}
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="understood"
+                               id="u4" value="3">
+                        <label for="u4">
+                            {% if lang == 'hi' %}अक्सर/हमेशा{% else %}Often/Always{% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                {% if lang == 'hi' %}
+                    मेरे social factors जांचें →
+                {% else %}
+                    Analyze My Social Factors →
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    {% else %}
+    <!-- RESULTS -->
+    <div class="question-card">
+        <h2>
+            {% if lang == 'hi' %}📊 आपके परिणाम
+            {% else %}📊 Your Results{% endif %}
+        </h2>
+        <p class="desc">
+            {% if lang == 'hi' %}
+                यहाँ आपके सामाजिक जीवन का विश्लेषण है:
+            {% else %}
+                Here's what your social data shows:
+            {% endif %}
+        </p>
+
+        {% for item in results %}
+        <div class="result-item
+            {{ 'warning' if '⚠️' in item.status else
+               'good' if '✅' in item.status else 'info' }}">
+            <div class="factor">{{ item.factor }}</div>
+            <div class="status">{{ item.status }}</div>
+            <div class="tip">{{ item.tip }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Next Section -->
+    <div class="next-options">
+        <h3>
+            {% if lang == 'hi' %}
+                क्या आप अपने cognitive patterns भी
+                check करना चाहते हैं?
+            {% else %}
+                Would you like to check your
+                cognitive patterns too?
+            {% endif %}
+        </h3>
+        <p style="color:#888; font-size:0.85rem;
+                  margin-bottom:15px">
+            {% if lang == 'hi' %}
+                (overthinking, rumination — ek
+                surprising research finding)
+            {% else %}
+                (overthinking, rumination — a
+                surprising research finding)
+            {% endif %}
+        </p>
+        <div class="next-btns">
+            <a href="/cognitive" class="btn-yes">
+                {% if lang == 'hi' %}
+                    हाँ, जांचें ✓
+                {% else %}
+                    Yes, Check ✓
+                {% endif %}
+            </a>
+            <a href="/report" class="btn-no">
+                {% if lang == 'hi' %}
+                    नहीं, रिपोर्ट देखें
+                {% else %}
+                    No, See Report
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="crisis-bar">
+        🆘 {% if lang == 'hi' %}अभी मदद चाहिए?
+        {% else %}Need help right now?{% endif %}
+        <strong>iCall: 9152987821</strong> |
+        <strong>Vandrevala: 1860-2662-345</strong>
+    </div>
+
+</div>
+</body>
+</html>

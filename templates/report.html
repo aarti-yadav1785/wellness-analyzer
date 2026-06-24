@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wellness Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>📋
+            {% if lang == 'hi' %}आपकी Wellness Report
+            {% else %}Your Wellness Report{% endif %}
+        </h1>
+        <p class="subtitle">
+            {% if lang == 'hi' %}
+                सभी sections का combined summary
+            {% else %}
+                Combined summary of all sections
+            {% endif %}
+        </p>
+        <p class="disclaimer">
+            ⚠️
+            {% if lang == 'hi' %}
+                यह report एक self-awareness tool है —
+                clinical diagnosis नहीं।
+            {% else %}
+                This report is a self-awareness tool —
+                not a clinical diagnosis.
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- Overall Risk -->
+    <div class="overall-card
+        {{ 'overall-green' if '🟢' in overall[0]
+           else 'overall-yellow' if '🟡' in overall[0]
+           else 'overall-red' }}">
+        <div style="font-size:1.5rem; margin-bottom:8px">
+            {{ overall[0] }}
+        </div>
+        <div style="font-size:0.95rem; font-weight:normal">
+            {{ overall[1] }}
+        </div>
+    </div>
+
+    <!-- Lifestyle Results -->
+    {% if lifestyle %}
+    <div class="question-card">
+        <h2>😴
+            {% if lang == 'hi' %}जीवनशैली
+            {% else %}Lifestyle{% endif %}
+        </h2>
+        {% for item in lifestyle %}
+        <div class="result-item
+            {{ 'warning' if '⚠️' in item.status
+               else 'good' if '✅' in item.status
+               else 'info' }}">
+            <div class="factor">{{ item.factor }}</div>
+            <div class="status">{{ item.status }}</div>
+            <div class="tip">{{ item.tip }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Social Results -->
+    {% if social %}
+    <div class="question-card">
+        <h2>👥
+            {% if lang == 'hi' %}सामाजिक जीवन
+            {% else %}Social Factors{% endif %}
+        </h2>
+        {% for item in social %}
+        <div class="result-item
+            {{ 'warning' if '⚠️' in item.status
+               else 'good' if '✅' in item.status
+               else 'info' }}">
+            <div class="factor">{{ item.factor }}</div>
+            <div class="status">{{ item.status }}</div>
+            <div class="tip">{{ item.tip }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Cognitive Results -->
+    {% if cognitive %}
+    <div class="question-card">
+        <h2>🧠
+            {% if lang == 'hi' %}मन की आदतें
+            {% else %}Cognitive Patterns{% endif %}
+        </h2>
+        {% for item in cognitive %}
+        <div class="result-item
+            {{ 'warning' if '⚠️' in item.status
+               else 'good' if '✅' in item.status
+               else 'info' }}">
+            <div class="factor">{{ item.factor }}</div>
+            <div class="status">{{ item.status }}</div>
+            <div class="tip">{{ item.tip }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Depression Results -->
+    {% if depression %}
+    <div class="question-card">
+        <h2>💙
+            {% if lang == 'hi' %}मनोदशा (PHQ-9)
+            {% else %}Mood Screening (PHQ-9){% endif %}
+        </h2>
+
+        {% if depression.crisis %}
+        <div class="crisis-box">
+            <h3>{{ depression.crisis_resources.title }}</h3>
+            <p>{{ depression.crisis_resources.message }}</p>
+            <ul>
+                {% for r in depression.crisis_resources.resources %}
+                <li>📞 {{ r }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="score-display">
+            {% if lang == 'hi' %}PHQ-9 Score:
+            {% else %}PHQ-9 Score:{% endif %}
+            <span class="score-number">
+                {{ depression.total_score }}/27
+            </span>
+        </div>
+
+        <div class="severity-badge
+            {{ 'severity-green' if depression.severity == 'minimal'
+               else 'severity-yellow' if depression.severity == 'mild'
+               else 'severity-red' }}">
+            {{ depression.severity | title }}
+        </div>
+
+        <div class="result-item
+            {{ 'good' if depression.severity == 'minimal'
+               else 'warning' }}">
+            <div class="tip">{{ depression.tip }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Anxiety Results -->
+    {% if anxiety %}
+    <div class="question-card">
+        <h2>😰
+            {% if lang == 'hi' %}चिंता (GAD-7)
+            {% else %}Anxiety Screening (GAD-7){% endif %}
+        </h2>
+
+        <div class="score-display">
+            {% if lang == 'hi' %}GAD-7 Score:
+            {% else %}GAD-7 Score:{% endif %}
+            <span class="score-number">
+                {{ anxiety.total_score }}/21
+            </span>
+        </div>
+
+        <div class="severity-badge
+            {{ 'severity-green' if anxiety.severity == 'minimal'
+               else 'severity-yellow' if anxiety.severity == 'mild'
+               else 'severity-red' }}">
+            {{ anxiety.severity | title }}
+        </div>
+
+        <div class="result-item
+            {{ 'good' if anxiety.severity == 'minimal'
+               else 'warning' }}">
+            <div class="tip">{{ anxiety.tip }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Not Checked Sections -->
+    {% if not social and not cognitive
+       and not depression and not anxiety %}
+    <div class="question-card" style="text-align:center;
+         color:#888;">
+        <p>
+            {% if lang == 'hi' %}
+                आपने सिर्फ lifestyle section complete
+                किया। बाकी sections के लिए:
+            {% else %}
+                You completed only the lifestyle section.
+                For other sections:
+            {% endif %}
+        </p>
+        <div class="next-btns" style="margin-top:15px;
+             justify-content:center">
+            <a href="/social" class="btn-yes">
+                {% if lang == 'hi' %}
+                    Social check करें
+                {% else %}
+                    Check Social
+                {% endif %}
+            </a>
+            <a href="/depression" class="btn-yes">
+                {% if lang == 'hi' %}
+                    PHQ-9 करें
+                {% else %}
+                    Take PHQ-9
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ML INSIGHTS SECTION -->
+    {% if ml_insights %}
+    <div class="question-card">
+        <h2>
+            {% if lang == 'hi' %}ML Insights
+            {% else %}ML Insights{% endif %}
+        </h2>
+        <p class="desc">
+            {% if lang == 'hi' %}
+                Machine Learning models ne aapke data
+                se yeh patterns nikale:
+            {% else %}
+                Here's what our ML models found
+                from your responses:
+            {% endif %}
+        </p>
+
+        <!-- K-Means Cluster -->
+        <div class="ml-insight-box cluster">
+            <div class="ml-label">
+                
+            </div>
+            <div class="ml-value">
+                {{ ml_insights.cluster }}
+            </div>
+            <div class="ml-desc">
+                {% if lang == 'hi' %}
+                    Aapke overall patterns ke hisaab
+                    se aap is risk group mein hain
+                {% else %}
+                    Based on your combined patterns,
+                    you fall in this risk group
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Decision Tree -->
+        <div class="ml-insight-box dt">
+            <div class="ml-label">
+               
+                ({{ ml_insights.dt_risk[0] }})
+            </div>
+            <div class="ml-desc">
+                {% if lang == 'hi' %}
+                    <strong>Top factors jo aapke
+                    risk pe sabse zyada asar
+                    dalte hain:</strong>
+                    PHQ-9 score, GAD-7 score,
+                    aur Loneliness
+                {% else %}
+                    <strong>Top factors affecting
+                    your risk level:</strong>
+                    PHQ-9 score, GAD-7 score,
+                    and Loneliness
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- SVM -->
+        <div class="ml-insight-box svm">
+            <div class="ml-label">
+               
+            </div>
+            <div class="ml-value">
+                {{ ml_insights.svm_risk[0] }}
+            </div>
+            <div class="ml-desc">
+                {% if lang == 'hi' %}
+                    {{ ml_insights.svm_confidence }}%
+                    confidence ke saath
+                {% else %}
+                    with {{ ml_insights.svm_confidence }}%
+                    confidence
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Linear Regression — Rumination Impact -->
+        <div class="ml-insight-box lr">
+            <div class="ml-label">
+               
+            </div>
+            <div class="ml-desc">
+                {% if lang == 'hi' %}
+                    Aapke rumination pattern ki wajah
+                    se anxiety score mein estimated
+                    <strong>
+                    +{{ ml_insights.rum_impact }}
+                    points</strong> ka impact hai.
+                    Rumination reduce karne se anxiety
+                    mein significant improvement
+                    ho sakti hai.
+                {% else %}
+                    Your rumination pattern is
+                    contributing an estimated
+                    <strong>
+                    +{{ ml_insights.rum_impact }}
+                    points</strong> to your anxiety
+                    score. Reducing rumination could
+                    significantly improve anxiety.
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- KNN — Similar Users -->
+        <div class="ml-insight-box knn">
+            <div class="ml-label">
+                Similar Users
+            </div>
+            <div class="ml-desc">
+                {% if lang == 'hi' %}
+                    Aapke jaise 5 users ka average:
+                {% else %}
+                    Average of 5 users similar to you:
+                {% endif %}
+            </div>
+            <table class="similar-table"
+                   style="margin-top:10px">
+                <thead>
+                    <tr>
+                        <th>PHQ-9</th>
+                        <th>GAD-7</th>
+                        <th>Sleep</th>
+                        <th>Loneliness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in
+                       ml_insights.similar_users %}
+                    <tr>
+                        <td>{{ u.phq_total }}</td>
+                        <td>{{ u.gad_total }}</td>
+                        <td>{{ u.sleep }}</td>
+                        <td>{{ u.loneliness }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    {% endif %}
+    
+    <!-- Start Over -->
+    <div class="next-options" style="text-align:center">
+        <h3>
+            {% if lang == 'hi' %}
+                दोबारा check करना चाहते हैं?
+            {% else %}
+                Want to check again?
+            {% endif %}
+        </h3>
+        <p style="color:#888; font-size:0.85rem;
+                  margin-bottom:15px">
+            {% if lang == 'hi' %}
+                अपनी progress track करने के लिए
+                हफ्ते में एक बार check करें।
+            {% else %}
+                Check once a week to track
+                your progress over time.
+            {% endif %}
+        </p>
+        <a href="/" class="btn-yes">
+            {% if lang == 'hi' %}
+                🔄 नया Check शुरू करें
+            {% else %}
+                🔄 Start New Check
+            {% endif %}
+        </a>
+    </div>
+
+    <!-- Final Crisis Bar -->
+    <div class="crisis-bar">
+        🆘 {% if lang == 'hi' %}अभी मदद चाहिए?
+        {% else %}Need help right now?{% endif %}
+        <strong>iCall: 9152987821</strong> |
+        <strong>Vandrevala: 1860-2662-345</strong>
+    </div>
+
+</div>
+</body>
+</html>

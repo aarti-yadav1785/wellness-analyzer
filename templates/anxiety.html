@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anxiety Screening — Wellness Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>😰
+            {% if lang == 'hi' %}चिंता जांच (GAD-7)
+            {% else %}Anxiety Screening (GAD-7){% endif %}
+        </h1>
+        <p class="subtitle">
+            {% if lang == 'hi' %}
+                पिछले 2 हफ्तों के बारे में सोचकर जवाब दें
+            {% else %}
+                Answer based on the past 2 weeks
+            {% endif %}
+        </p>
+    </div>
+
+    {% if not submitted %}
+    <div class="question-card">
+
+        <div class="research-note">
+            ⚠️
+            {% if lang == 'hi' %}
+                GAD-7 एक clinically validated anxiety
+                screening tool है। यह diagnosis नहीं —
+                सिर्फ self-awareness check है।
+                <br><br>
+                <strong>Note:</strong> यहाँ "चिंता" से
+                मतलब वह feeling है जो control से बाहर
+                लगे — सिर्फ normal daily tension नहीं।
+                <br><br>
+                <strong>Scale:</strong>
+                0 = बिल्कुल नहीं |
+                1 = कुछ दिनों में |
+                2 = आधे से ज़्यादा दिनों में |
+                3 = लगभग हर दिन
+            {% else %}
+                GAD-7 is a clinically validated anxiety
+                screening tool. This is NOT a diagnosis —
+                it's a self-awareness check only.
+                <br><br>
+                <strong>Note:</strong> "Worry" here means
+                anxiety that feels out of control —
+                not normal daily stress.
+                <br><br>
+                <strong>Scale:</strong>
+                0 = Not at all |
+                1 = Several days |
+                2 = More than half the days |
+                3 = Nearly every day
+            {% endif %}
+        </div>
+
+        <form method="POST" action="/anxiety">
+            <input type="hidden" name="lang" value="{{ lang }}">
+
+            <!-- Q1 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q1.</span>
+                    {% if lang == 'hi' %}
+                        घबराहट, बेचैनी या on-edge महसूस करना?
+                    {% else %}
+                        Feeling nervous, anxious, or on edge?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q1" id="a1a" value="0" required><label for="a1a">0</label></div>
+                    <div><input type="radio" name="q1" id="a1b" value="1"><label for="a1b">1</label></div>
+                    <div><input type="radio" name="q1" id="a1c" value="2"><label for="a1c">2</label></div>
+                    <div><input type="radio" name="q1" id="a1d" value="3"><label for="a1d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q2.</span>
+                    {% if lang == 'hi' %}
+                        चिंता को रोक न पाना या control
+                        न कर पाना?
+                    {% else %}
+                        Not being able to stop or
+                        control worrying?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q2" id="a2a" value="0" required><label for="a2a">0</label></div>
+                    <div><input type="radio" name="q2" id="a2b" value="1"><label for="a2b">1</label></div>
+                    <div><input type="radio" name="q2" id="a2c" value="2"><label for="a2c">2</label></div>
+                    <div><input type="radio" name="q2" id="a2d" value="3"><label for="a2d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q3.</span>
+                    {% if lang == 'hi' %}
+                        अलग-अलग चीज़ों के बारे में
+                        बहुत ज़्यादा चिंता करना?
+                    {% else %}
+                        Worrying too much about
+                        different things?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q3" id="a3a" value="0" required><label for="a3a">0</label></div>
+                    <div><input type="radio" name="q3" id="a3b" value="1"><label for="a3b">1</label></div>
+                    <div><input type="radio" name="q3" id="a3c" value="2"><label for="a3c">2</label></div>
+                    <div><input type="radio" name="q3" id="a3d" value="3"><label for="a3d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q4.</span>
+                    {% if lang == 'hi' %}
+                        relax करने में परेशानी?
+                    {% else %}
+                        Trouble relaxing?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q4" id="a4a" value="0" required><label for="a4a">0</label></div>
+                    <div><input type="radio" name="q4" id="a4b" value="1"><label for="a4b">1</label></div>
+                    <div><input type="radio" name="q4" id="a4c" value="2"><label for="a4c">2</label></div>
+                    <div><input type="radio" name="q4" id="a4d" value="3"><label for="a4d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q5.</span>
+                    {% if lang == 'hi' %}
+                        इतना restless होना कि एक जगह
+                        बैठना मुश्किल हो?
+                    {% else %}
+                        Being so restless that it's
+                        hard to sit still?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q5" id="a5a" value="0" required><label for="a5a">0</label></div>
+                    <div><input type="radio" name="q5" id="a5b" value="1"><label for="a5b">1</label></div>
+                    <div><input type="radio" name="q5" id="a5c" value="2"><label for="a5c">2</label></div>
+                    <div><input type="radio" name="q5" id="a5d" value="3"><label for="a5d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q6.</span>
+                    {% if lang == 'hi' %}
+                        आसानी से चिड़चिड़ा या
+                        परेशान हो जाना?
+                    {% else %}
+                        Becoming easily annoyed
+                        or irritable?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q6" id="a6a" value="0" required><label for="a6a">0</label></div>
+                    <div><input type="radio" name="q6" id="a6b" value="1"><label for="a6b">1</label></div>
+                    <div><input type="radio" name="q6" id="a6c" value="2"><label for="a6c">2</label></div>
+                    <div><input type="radio" name="q6" id="a6d" value="3"><label for="a6d">3</label></div>
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="form-group">
+                <label>
+                    <span class="q-num">Q7.</span>
+                    {% if lang == 'hi' %}
+                        किसी बुरी चीज़ के होने का डर —
+                        जैसे कि कुछ भयानक होने वाला है?
+                    {% else %}
+                        Feeling afraid as if something
+                        awful might happen?
+                    {% endif %}
+                </label>
+                <div class="scale-options">
+                    <div><input type="radio" name="q7" id="a7a" value="0" required><label for="a7a">0</label></div>
+                    <div><input type="radio" name="q7" id="a7b" value="1"><label for="a7b">1</label></div>
+                    <div><input type="radio" name="q7" id="a7c" value="2"><label for="a7c">2</label></div>
+                    <div><input type="radio" name="q7" id="a7d" value="3"><label for="a7d">3</label></div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                {% if lang == 'hi' %}
+                    मेरे results देखें →
+                {% else %}
+                    See My Results →
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    {% else %}
+    <!-- RESULTS -->
+    <div class="question-card">
+        <h2>
+            {% if lang == 'hi' %}📊 आपके परिणाम
+            {% else %}📊 Your Results{% endif %}
+        </h2>
+
+        <div class="score-display">
+            {% if lang == 'hi' %}
+                आपका GAD-7 score:
+            {% else %}
+                Your GAD-7 Score:
+            {% endif %}
+            <span class="score-number">
+                {{ result.total_score }}/21
+            </span>
+        </div>
+
+        <div class="severity-badge
+            {{ 'severity-green' if result.severity == 'minimal'
+               else 'severity-yellow' if result.severity == 'mild'
+               else 'severity-red' }}">
+            {% if result.severity == 'minimal' %}
+                🟢 Minimal
+            {% elif result.severity == 'mild' %}
+                🟡 Mild
+            {% elif result.severity == 'moderate' %}
+                🟠 Moderate
+            {% else %}
+                🔴 Severe
+            {% endif %}
+        </div>
+
+        <div class="result-item
+            {{ 'good' if result.severity == 'minimal'
+               else 'warning' }}">
+            <div class="tip">{{ result.tip }}</div>
+        </div>
+    </div>
+
+    <!-- Go to Report -->
+    <div class="next-options">
+        <h3>
+            {% if lang == 'hi' %}
+                आपकी पूरी wellness report
+                देखने के लिए तैयार हैं?
+            {% else %}
+                Ready to see your complete
+                wellness report?
+            {% endif %}
+        </h3>
+        <div class="next-btns">
+            <a href="/report" class="btn-yes">
+                {% if lang == 'hi' %}
+                    हाँ, पूरी Report देखें →
+                {% else %}
+                    Yes, See Full Report →
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="crisis-bar">
+        🆘 {% if lang == 'hi' %}अभी मदद चाहिए?
+        {% else %}Need help right now?{% endif %}
+        <strong>iCall: 9152987821</strong> |
+        <strong>Vandrevala: 1860-2662-345</strong>
+    </div>
+
+</div>
+</body>
+</html>
