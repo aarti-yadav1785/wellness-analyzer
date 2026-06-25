@@ -316,11 +316,24 @@ def get_ml_insights(lifestyle_results,
         distances, indices = \
             models['knn'].kneighbors(
                 features_scaled, n_neighbors=5)
+        try:
+    sheet = get_sheet()
+    if sheet:
+        all_data = sheet.get_all_records()
+        df = pd.DataFrame(all_data)
+    else:
         df = pd.read_csv('data/wellness_data.csv')
+
+    if len(df) >= 5:
         similar_users = df.iloc[indices[0]][[
             'phq_total', 'gad_total',
             'sleep', 'loneliness']].to_dict(
             'records')
+    else:
+        similar_users = []
+except:
+    similar_users = []
+insights['similar_users'] = similar_users
         insights['similar_users'] = similar_users
 
         # SVM
