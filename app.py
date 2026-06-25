@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import pickle
 import os
+import json
 import gspread
 from google.oauth2.service_account import Credentials
 from sklearn.cluster import KMeans
@@ -25,7 +26,6 @@ app.secret_key = 'wellness2024'
 # ==========================================
 def get_sheet():
     try:
-        import json
         scopes = [
             'https://www.googleapis.com/auth/spreadsheets',
             'https://www.googleapis.com/auth/drive'
@@ -151,7 +151,7 @@ def retrain_models(df):
         print(f"⚠️ Retrain error: {e}")
 
 # ==========================================
-# SAVE LOCAL (Fallback)
+# SAVE LOCAL FALLBACK
 # ==========================================
 def save_local(new_row):
     try:
@@ -211,7 +211,6 @@ def save_user_data(raw_inputs, phq_score,
             risk_level
         ]
 
-        # Google Sheets mein save karo
         sheet = get_sheet()
         if sheet:
             sheet.append_row(new_row)
@@ -219,16 +218,14 @@ def save_user_data(raw_inputs, phq_score,
             print(f"✅ Data saved to Google Sheets!"
                   f" Total rows: {total}")
 
-            # CSV bhi update karo
-            os.makedirs('data', exist_ok=True)
             all_data = sheet.get_all_records()
             if all_data:
+                os.makedirs('data', exist_ok=True)
                 df = pd.DataFrame(all_data)
                 df.to_csv(
                     'data/wellness_data.csv',
                     index=False)
 
-            # Har 50 users pe retrain
             if total % 50 == 0 and total >= 51:
                 print("🔄 Retraining ML models...")
                 df_retrain = pd.read_csv(
@@ -312,28 +309,29 @@ def get_ml_insights(lifestyle_results,
         }
         insights['dt_risk'] = risk_labels[risk_pred]
 
-        # KNN
+        # KNN — Similar Users
         distances, indices = \
             models['knn'].kneighbors(
                 features_scaled, n_neighbors=5)
         try:
-    sheet = get_sheet()
-    if sheet:
-        all_data = sheet.get_all_records()
-        df = pd.DataFrame(all_data)
-    else:
-        df = pd.read_csv('data/wellness_data.csv')
+            sheet = get_sheet()
+            if sheet:
+                all_data = sheet.get_all_records()
+                df = pd.DataFrame(all_data)
+            else:
+                df = pd.read_csv(
+                    'data/wellness_data.csv')
 
-    if len(df) >= 5:
-        similar_users = df.iloc[indices[0]][[
-            'phq_total', 'gad_total',
-            'sleep', 'loneliness']].to_dict(
-            'records')
-    else:
-        similar_users = []
-except:
-    similar_users = []
-insights['similar_users'] = similar_users
+            if len(df) >= 5:
+                similar_users = df.iloc[
+                    indices[0]][[
+                    'phq_total', 'gad_total',
+                    'sleep', 'loneliness']].to_dict(
+                    'records')
+            else:
+                similar_users = []
+        except Exception:
+            similar_users = []
         insights['similar_users'] = similar_users
 
         # SVM
@@ -553,7 +551,6 @@ def report():
         'depression_result', None)
     anxiety = session.get('anxiety_result', None)
 
-    # Overall risk
     warnings = 0
     for item in lifestyle + social + cognitive:
         if '⚠️' in item.get('status', ''):
@@ -591,7 +588,6 @@ def report():
             "Several areas need improvement.")
         risk_num = 2
 
-    # Real user data save karo
     raw = session.get('raw_inputs', {})
     phq_score = depression['total_score'] \
                 if depression else 5
@@ -600,7 +596,6 @@ def report():
     save_user_data(raw, phq_score,
                    gad_score, risk_num)
 
-    # ML Insights
     ml_insights = get_ml_insights(
         lifestyle, social, cognitive,
         depression, anxiety, lang)
